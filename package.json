@@ -1,6 +1,6 @@
 {
   "name": "comuni-ita",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API to fetch data about italian cities",
   "main": "index.js",
   "scripts": {

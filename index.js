@@ -31,4 +31,4 @@ app.get('/api/:regione', function(req, res) {
     res.send(getComuni(req.query));
 });
 
-app.listen(3000, () => console.log(`API comuni-ita listening on port 3000!`));
+app.listen(process.env.PORT || 3000, () => console.log(`API comuni-ita is running!`));
