@@ -1,0 +1,19 @@
+{
+  "name": "comuni-ita",
+  "version": "1.0.0",
+  "description": "API to fetch data about italian cities",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nicolò Rebaioli <niko.reba@gmail.com> (https://rebaioli.altervista.org/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Samurai016/comuni-ita.git"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security"
+  }
+}
