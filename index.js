@@ -47,4 +47,6 @@ app.get('/api/:regione', function(req, res) {
     res.send(getComuni(req.query));
 });
 
+app.use(express.static('docs'));
+
 app.listen(process.env.PORT || 3000, () => console.log(`API comuni-ita is running!`));

@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Comuni ITA",
+    "description": "Semplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
+    "version": "1.3.0",
+    "x-logo": {
+      "url": "./assets/logo.png",
+      "altText": "Comuni ITA Logo"
+    },
+    "contact": {
+      "name": "Nicolò Rebaioli",
+      "email": "niko.reba@gmail.com",
+      "url": "https://rebaioli.altervista.org"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "externalDocs": {
+    "description": "Github",
+    "url": "https://github.com/Samurai016/comuni-ita"
+  },
+  "servers": [
+    {
+      "url": "https://comuni-ita.herokuapp.com/"
+    },
+    {
+      "url": "http://comuni-ita.herokuapp.com/"
+    }
+  ],
+  "paths": {
+    "/comune": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/regione"
+        },
+        {
+          "$ref": "#/components/parameters/provincia"
+        },
+        {
+          "$ref": "#/components/parameters/withprovince"
+        },
+        {
+          "$ref": "#/components/parameters/onlyname"
+        }
+      ],
+      "get": {
+        "summary": "Ottieni la lista dei comuni.",
+        "operationId": "comune",
+        "responses": {
+          "200": {
+            "description": "L'operazione ha avuto successo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comune"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Errore del server. **Contattare lo sviluppatore.**"
+          }
+        }
+      }
+    },
+    "/{regione}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/provincia"
+        },
+        {
+          "$ref": "#/components/parameters/withprovince"
+        },
+        {
+          "$ref": "#/components/parameters/onlyname"
+        }
+      ],
+      "get": {
+        "summary": "Ottieni la lista dei comuni della regione specificata.",
+        "operationId": "regione",
+        "parameters": [
+          {
+            "name": "regione",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "La regione di cui si vuole i comuni. **In minuscolo**.",
+            "example": "lazio"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "L'operazione ha avuto successo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comune"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Errore del server. **Contattare lo sviluppatore.**"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "regione": {
+        "in": "query",
+        "name": "regione",
+        "schema": {
+          "type": "string"
+        },
+        "description": "La regione di cui si vuole i comuni. **In minuscolo**.",
+        "example": "lazio"
+      },
+      "provincia": {
+        "in": "query",
+        "name": "provincia",
+        "schema": {
+          "type": "string"
+        },
+        "description": "La provincia di cui si vuole i comuni. **In minuscolo**.  \nIl parametro sovrascrive l'eventuale parametro `regione`",
+        "example": "roma"
+      },
+      "withprovince": {
+        "in": "query",
+        "name": "withprovince",
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Può essere un valore qualunque.  \nIn caso il parametro abbia un valore, tra i risultati verrà inserito un comune \"aggiuntivo\" per ogni provincia. Tale comune avrà gli stessi parametri del capoluogo di provincia, con l'unica differenza che il nome presenterà la dicitura Provincia di ^capoluogo^.\n`{  \n  \"nome\": \"Provincia di Roma\",  \n  \"codice\": \"058091\",  \n  \"regione\": \"lazio\",  \n  \"provincia\": \"roma\",  \n  \"sigla\": \"RM\",  \n  \"codiceCatastale\": \"H501\",  \n  \"cap\": \"00118\"  \n}`",
+        "example": true
+      },
+      "onlyname": {
+        "in": "query",
+        "name": "onlyname",
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Può essere un valore qualunque.  \nIn caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi dei comuni selezionati.",
+        "example": true
+      }
+    },
+    "schemas": {
+      "Comune": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome del comune.",
+            "example": "Roma"
+          },
+          "codice": {
+            "type": "string",
+            "description": "Codice ISTAT del comune.",
+            "example": "058091"
+          },
+          "regione": {
+            "type": "string",
+            "description": "Regione del comune (in minuscolo).",
+            "example": "lazio"
+          },
+          "provincia": {
+            "type": "string",
+            "description": "Provincia del comune (in minuscolo, per esteso).",
+            "example": "roma"
+          },
+          "sigla": {
+            "type": "string",
+            "description": "Sigla della provincia del comune (in maiuscolo).",
+            "example": "RM",
+            "pattern": "[A-Z]{2}"
+          },
+          "codiceCatastale": {
+            "type": "string",
+            "description": "Codice catastale del comune.",
+            "example": "H501",
+            "pattern": "[A-Z]\\d{3}"
+          },
+          "cap": {
+            "type": "string",
+            "description": "Codice di Avviamento Postale (CAP) del comune.",
+            "example": "00118",
+            "pattern": "\\d{5}"
+          }
+        }
+      }
+    }
+  }
+}
