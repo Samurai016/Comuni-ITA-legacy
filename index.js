@@ -14,6 +14,20 @@ function getComuni(params) {
     else if (params["regione"] && regioni.includes(params["regione"])) {
         comuni = JSON.parse(fs.readFileSync(`./regioni/${params["regione"]}.json`, 'utf8'));
     }
+    else {
+        comuni = JSON.parse(fs.readFileSync(`./comuni.json`, 'utf8'));
+    }
+
+    if (params["withprovincia"]) {
+        var province = [];
+        comuni.forEach(function(c, index) { 
+            if (c.nome.toLowerCase() == c.provincia) {
+                province.push(Object.assign({}, c));
+                comuni[index].nome = "Provincia di " + c.nome; 
+            }
+        });
+        comuni = comuni.concat(province);
+    }
 
     if (params["onlyname"]) {
         comuni.forEach((c, index) => comuni[index] = c.nome);
