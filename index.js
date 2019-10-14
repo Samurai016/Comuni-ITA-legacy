@@ -18,7 +18,7 @@ function getComuni(params) {
         comuni = JSON.parse(fs.readFileSync(`./comuni.json`, 'utf8'));
     }
 
-    if (params["withprovincia"]) {
+    if (params["withprovince"]) {
         var province = [];
         comuni.forEach(function(c, index) { 
             if (c.nome.toLowerCase() == c.provincia) {
