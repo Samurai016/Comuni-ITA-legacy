@@ -13,7 +13,7 @@ niko.reba@gmail.com
 **License:** [MIT](https://opensource.org/licenses/MIT)  
 **Credits:** Logo inpired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)
 
-### /comune
+### /api/comune
 
 #### GET
 ##### Summary:
@@ -36,7 +36,7 @@ Ottieni la lista dei comuni.
 | 200 | L'operazione ha avuto successo. | Array(Object) |
 | 5XX | Errore del server. **Contattare lo sviluppatore.** | |
 
-### /{regione}
+### /api/{regione}
 
 #### GET
 ##### Summary:

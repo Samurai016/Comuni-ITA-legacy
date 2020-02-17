@@ -31,7 +31,7 @@
     }
   ],
   "paths": {
-    "/comune": {
+    "/api/comune": {
       "parameters": [
         {
           "$ref": "#/components/parameters/regione"
@@ -69,7 +69,7 @@
         }
       }
     },
-    "/{regione}": {
+    "/api/{regione}": {
       "parameters": [
         {
           "$ref": "#/components/parameters/provincia"
