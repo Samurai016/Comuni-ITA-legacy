@@ -1,7 +1,18 @@
 {
   "name": "comuni-ita",
-  "version": "1.4.2",
-  "description": "API to fetch data about italian cities",
+  "version": "2.0.0",
+  "description": "API to fetch data about italian municipalities",
+  "keywords": [
+    "api",
+    "italy",
+    "municipalities",
+    "cities",
+    "regions",
+    "open source",
+    "comuni",
+    "italia",
+    "italiano"
+  ],
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -15,7 +26,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-sslify": "^1.2.0",
-    "fs": "0.0.1-security"
+    "express-sslify": "^1.2.0"
   }
 }

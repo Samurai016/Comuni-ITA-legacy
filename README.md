@@ -5,181 +5,51 @@
 
 Semplice API che permette di ottenere in formato JSON i comuni italiani.
 
-**Contact information:**  
-Nicolò Rebaioli  
-https://rebaioli.altervista.org  
-niko.reba@gmail.com  
-
 **License:** [MIT](https://opensource.org/licenses/MIT)  
 **Credits:** Logo inpired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)
 
-### /api/comune
+# Endpoints
 
-#### GET
-##### Summary:
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/comuni
 
-Ottieni la lista dei comuni.
+Ottieni la lista di tutti i comuni italiani.
 
-##### Parameters
+**Questo endpoint nelle versioni precedenti alla [2.0.0](https://github.com/Samurai016/Comuni-ITA/releases/tag/2.0.0) era disponibile all'url `/comune`.  \
+        Ora quell'URL è deprecato, rimarrà disponibile, ma si consiglia l'aggiornamento dei propri progetti al nuovo URL.**
 
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| regione | query | La regione di cui si vuole i comuni.  [Vedi qui per maggiori informazioni](#regioni) | No | string |
-| provincia | query | La provincia di cui si vuole i comuni.  Il parametro sovrascrive l'eventuale parametro `regione`.  [Vedi qui per maggiori informazioni](#province) | No | string |
-| withprovince | query | Può essere un valore qualunque. In caso il parametro abbia un valore, tra i risultati verrà inserito un comune "aggiuntivo" per ogni provincia. Tale comune avrà gli stessi parametri del capoluogo di provincia, con l'unica differenza che il nome presenterà la dicitura Provincia di ^capoluogo^. | No | string |
-| onlyname | query | Può essere un valore qualunque. In caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi dei comuni selezionati. | No | string |
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/comuni)
 
-##### Responses
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/comuni/{regione}
 
-| Code | Description | Schema |
-| ---- | ----------- | ---- |
-| 200 | L'operazione ha avuto successo. | Array(Object) |
-| 5XX | Errore del server. **Contattare lo sviluppatore.** | |
+Ottieni la lista di tutti i comuni della regione indicata.
 
-### /api/{regione}
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/comuni-regione)
 
-#### GET
-##### Summary:
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/comuni/provincia/{provincia}
 
-Ottieni la lista dei comuni della regione specificata.
+Ottieni la lista di tutti i comuni della provincia indicata.
 
-##### Parameters
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/comuni-provincia)
 
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| regione | path | La regione di cui si vuole i comuni.  [Vedi qui per maggiori informazioni](#regioni) | **Si** | string |
-| provincia | query | La provincia di cui si vuole i comuni.  Il parametro sovrascrive l'eventuale parametro `regione`. [Vedi qui per maggiori informazioni](#province) | No | string |
-| withprovince | query | Può essere un valore qualunque. In caso il parametro abbia un valore, tra i risultati verrà inserito un comune "aggiuntivo" per ogni provincia. Tale comune avrà gli stessi parametri del capoluogo di provincia, con l'unica differenza che il nome presenterà la dicitura Provincia di ^capoluogo^. | No | string |
-| onlyname | query | Può essere un valore qualunque. In caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi dei comuni selezionati. | No | string |
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/province
 
-##### Responses
+Ottieni la lista di tutte le province italiane.
 
-| Code | Description | Schema |
-| ---- | ----------- | ---- |
-| 200 | L'operazione ha avuto successo. | Array(Object) |
-| 5XX | Errore del server. **Contattare lo sviluppatore.** | |
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/province)
 
-# Regioni
-Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/province/{regione}
 
-> Esempio  
-> `https://comuni-ita.herokuapp.com/api/friuli%20venezia%20giulia`  
-> `https://comuni-ita.herokuapp.com/api/valle%20d%27aosta`
+Ottieni la lista di tutte le province della regione indicata.
 
-# Province
-Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/province-regione)
 
-> Esempio  
-> `https://comuni-ita.herokuapp.com/api/comune?provincia=reggio%20emilia`  
-> `https://comuni-ita.herokuapp.com/api/comune?provincia=l%27aquila`
+## ![GET](https://img.shields.io/static/v1?label=%20&message=GET&color=187bdf&style=flat-square) /api/regioni
 
-Per completezza lascio la tabella delle province disponbili:
-| Provincia |
-| --- |
-| Padova |
-| Lodi |
-| Lecco |
-| Siena |
-| Oristano |
-| Pescara |
-| Milano |
-| Pistoia |
-| Potenza |
-| Ragusa |
-| Foggia |
-| Cuneo |
-| Matera |
-| L'Aquila |
-| Rieti |
-| Salerno |
-| Napoli |
-| Catania |
-| Frosinone |
-| Cosenza |
-| Brescia |
-| Pesaro E Urbino |
-| Cremona |
-| Mantova |
-| Viterbo |
-| Vibo Valentia |
-| Ascoli Piceno |
-| Terni |
-| Campobasso |
-| Isernia |
-| Bari |
-| Caltanissetta |
-| Messina |
-| Alessandria |
-| Bergamo |
-| Rovigo |
-| Verona |
-| Roma |
-| Reggio Calabria |
-| Piacenza |
-| Sassari |
-| Enna |
-| Asti |
-| Torino |
-| Belluno |
-| Varese |
-| Monza E Della Brianza |
-| Novara |
-| Agrigento |
-| Ancona |
-| Vicenza |
-| Udine |
-| Avellino |
-| Caserta |
-| Biella |
-| Benevento |
-| Imperia |
-| Trento |
-| Pavia |
-| Vercelli |
-| Savona |
-| Teramo |
-| Sondrio |
-| Parma |
-| Como |
-| Catanzaro |
-| Reggio Emilia |
-| Trapani |
-| Bolzano |
-| Lecce |
-| Ravenna |
-| Palermo |
-| Valle D'Aosta |
-| Fermo |
-| Chieti |
-| Treviso |
-| Bologna |
-| Lucca |
-| La Spezia |
-| Pordenone |
-| Barletta-Andria-Trani |
-| Arezzo |
-| Venezia |
-| Verbano-Cusio-Ossola |
-| Macerata |
-| Latina |
-| Sud Sardegna |
-| Grosseto |
-| Genova |
-| Ferrara |
-| Nuoro |
-| Cagliari |
-| Perugia |
-| Siracusa |
-| Massa-Carrara |
-| Taranto |
-| Firenze |
-| Forlì-Cesena |
-| Modena |
-| Rimini |
-| Crotone |
-| Livorno |
-| Pisa |
-| Brindisi |
-| Prato |
-| Gorizia |
-| Trieste |
+Ottieni la lista delle regioni italiane.
+
+### [Documentazione](https://comuni-ita.herokuapp.com/#operation/regioni)
+
+# Dettagli sulle regioni e sulle province
+
+Per evitare incongruenze coi nomi di regioni e province, si consiglia di verificare i nomi attraverso gli endpoint `/api/regioni` e `/api/province`.  \
+In generale i nomi vanno scritti utilizzando i caratteri speciali come apostrofi, spazi o trattini.

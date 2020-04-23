@@ -5,7 +5,7 @@ info:
     Semplice API che permette di ottenere in formato JSON i comuni italiani.
     
     *Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*
-  version: 1.4.2
+  version: 2.0.0
   x-logo: 
     url: "./assets/logo.png"
     altText: "Comuni ITA Logo"
@@ -22,16 +22,25 @@ externalDocs:
 servers:
 - url: https://comuni-ita.herokuapp.com
 - url: http://comuni-ita.herokuapp.com
+tags:
+  - name: comuni
+    description: Endpoint che restituiscono comuni
+  - name: province
+    description: Endpoint che restituiscono province
+  - name: regioni
+    description: Endpoint che restituiscono regioni
 paths:
-  /comune:
+  /api/comuni:
     parameters:
-      - $ref: '#/components/parameters/regione'
-      - $ref: '#/components/parameters/provincia'
-      - $ref: '#/components/parameters/withprovince'
       - $ref: '#/components/parameters/onlyname'
     get:
-      summary: Ottieni la lista dei comuni.
-      operationId: comune
+      summary: Ottieni la lista di tutti i comuni italiani.
+      description: |-
+        **Questo endpoint nelle versioni precedenti alla [2.0.0](https://github.com/Samurai016/Comuni-ITA/releases/tag/2.0.0) era disponibile all'url `/comune`.  \
+        Ora quell'URL è deprecato, rimarrà disponibile, ma si consiglia l'aggiornamento dei propri progetti al nuovo URL.**
+      operationId: comuni
+      tags:
+          - comuni
       responses:
         200:
           description: L'operazione ha avuto successo.
@@ -43,25 +52,15 @@ paths:
                   $ref: '#/components/schemas/Comune'
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
-  /{regione}:
+  /api/comuni/{regione}:
     parameters:
-      - $ref: '#/components/parameters/provincia'
-      - $ref: '#/components/parameters/withprovince'
+      - $ref: '#/components/parameters/regione'
       - $ref: '#/components/parameters/onlyname'
     get:
-      summary: Ottieni la lista dei comuni della regione specificata.
-      operationId: regione
-      parameters: 
-        - name: regione
-          in: path
-          required: true
-          schema:
-            type: string
-          description: |-
-            La regione di cui si vuole i comuni.  
-            Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
-            [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#regioni)
-            example: "valle%20d%27aosta"
+      summary: Ottieni la lista di tutti i comuni della regione indicata.
+      operationId: comuni-regione
+      tags:
+          - comuni
       responses:
         200:
           description: L'operazione ha avuto successo.
@@ -71,48 +70,114 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Comune'
+        400:
+          description: Richiesta errata. Probabilmente uno dei parametri è errato.
+        5XX:
+          description: Errore del server. **Contattare lo sviluppatore.**
+  /api/comuni/provincia/{provincia}:
+    parameters:
+      - $ref: '#/components/parameters/provincia'
+      - $ref: '#/components/parameters/onlyname'
+    get:
+      summary: Ottieni la lista di tutti i comuni della provincia indicata.
+      operationId: comuni-provincia
+      tags:
+          - comuni
+      responses:
+        200:
+          description: L'operazione ha avuto successo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comune'
+        400:
+          description: Richiesta errata. Probabilmente uno dei parametri è errato.
+        5XX:
+          description: Errore del server. **Contattare lo sviluppatore.**
+  /api/province:
+    get:
+      summary: Ottieni la lista di tutte le province italiane.
+      operationId: province
+      tags:
+          - province
+      responses:
+        200:
+          description: L'operazione ha avuto successo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: "roma"
+        5XX:
+          description: Errore del server. **Contattare lo sviluppatore.**
+  /api/province/{regione}:
+    parameters:
+      - $ref: '#/components/parameters/regione'
+    get:
+      summary: Ottieni la lista di tutte le province della regione indicata.
+      operationId: province-regione
+      tags:
+          - province
+      responses:
+        200:
+          description: L'operazione ha avuto successo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: "roma"
+        400:
+          description: Richiesta errata. Probabilmente uno dei parametri è errato.
+        5XX:
+          description: Errore del server. **Contattare lo sviluppatore.**
+  /api/regioni:
+    get:
+      summary: Ottieni la lista delle regioni italiane.
+      operationId: regioni
+      tags:
+          - regioni
+      responses:
+        200:
+          description: L'operazione ha avuto successo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: "lazio"
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
 components:
   parameters:
-    regione:
-      in: query
-      name: regione
-      schema:
-        type: string
-      description: |-
-        La regione di cui si vuole i comuni.  
-        Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
-        [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#regioni)
-      example: "valle%20d%27aosta"
     provincia:
-      in: query
+      in: path
       name: provincia
+      required: true
       schema:
         type: string
       description: |-
-        La provincia di cui si vuole i comuni.  
+        Nome della provincia di cui si vogliono i dati.  
         Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
         [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#province)
       example: "l%27aquila"
-    withprovince:
-      in: query
-      name: withprovince
+    regione:
+      in: path
+      name: regione
+      required: true
       schema:
-        type: boolean
-      description: |- 
-        Può essere un valore qualunque.  
-        In caso il parametro abbia un valore, tra i risultati verrà inserito un comune "aggiuntivo" per ogni provincia. Tale comune avrà gli stessi parametri del capoluogo di provincia, con l'unica differenza che il nome presenterà la dicitura Provincia di ^capoluogo^.
-        `{  
-          "nome": "Provincia di Roma",  
-          "codice": "058091",  
-          "regione": "lazio",  
-          "provincia": "roma",  
-          "sigla": "RM",  
-          "codiceCatastale": "H501",  
-          "cap": "00118"  
-        }`
-      example: true
+        type: string
+      description: |-
+        Nome della regione di cui si vogliono i dati.  
+        Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
+        [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#regioni)
+      example: "valle%20d%27aosta"
     onlyname:
       in: query
       name: onlyname
