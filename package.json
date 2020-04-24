@@ -1,6 +1,6 @@
 {
   "name": "comuni-ita",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "API to fetch data about italian municipalities",
   "keywords": [
     "api",
@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Samurai016/comuni-ita.git"
+    "url": "https://github.com/Samurai016/Comuni-ITA.git"
   },
   "dependencies": {
     "cors": "^2.8.5",

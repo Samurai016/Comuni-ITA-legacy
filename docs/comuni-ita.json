@@ -3,7 +3,7 @@
   "info": {
     "title": "Comuni ITA",
     "description": "Semplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "x-logo": {
       "url": "./assets/logo.png",
       "altText": "Comuni ITA Logo"
@@ -20,7 +20,7 @@
   },
   "externalDocs": {
     "description": "Github",
-    "url": "https://github.com/Samurai016/comuni-ita"
+    "url": "https://github.com/Samurai016/Comuni-ITA"
   },
   "servers": [
     {
@@ -155,6 +155,11 @@
       }
     },
     "/api/province": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/onlyname"
+        }
+      ],
       "get": {
         "summary": "Ottieni la lista di tutte le province italiane.",
         "operationId": "province",
@@ -169,8 +174,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string",
-                    "example": "roma"
+                    "$ref": "#/components/schemas/Provincia"
                   }
                 }
               }
@@ -184,6 +188,9 @@
     },
     "/api/province/{regione}": {
       "parameters": [
+        {
+          "$ref": "#/components/parameters/onlyname"
+        },
         {
           "$ref": "#/components/parameters/regione"
         }
@@ -202,8 +209,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string",
-                    "example": "roma"
+                    "$ref": "#/components/schemas/Provincia"
                   }
                 }
               }
@@ -256,8 +262,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Nome della provincia di cui si vogliono i dati.  \nEventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  \n[Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#province)",
-        "example": "l%27aquila"
+        "description": "Nome della provincia di cui si vogliono i dati.",
+        "example": "l'aquila"
       },
       "regione": {
         "in": "path",
@@ -266,8 +272,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Nome della regione di cui si vogliono i dati.  \nEventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  \n[Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#regioni)",
-        "example": "valle%20d%27aosta"
+        "description": "Nome della regione di cui si vogliono i dati.",
+        "example": "valle d'aosta"
       },
       "onlyname": {
         "in": "query",
@@ -303,12 +309,6 @@
             "description": "Provincia del comune (in minuscolo, per esteso).",
             "example": "roma"
           },
-          "sigla": {
-            "type": "string",
-            "description": "Sigla della provincia del comune (in maiuscolo).",
-            "example": "RM",
-            "pattern": "[A-Z]{2}"
-          },
           "codiceCatastale": {
             "type": "string",
             "description": "Codice catastale del comune.",
@@ -335,6 +335,32 @@
                 "example": 12.4823243
               }
             }
+          }
+        }
+      },
+      "Provincia": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome della provincia.",
+            "example": "roma"
+          },
+          "sigla": {
+            "type": "string",
+            "description": "Sigla della provincia (in minuscolo).",
+            "example": "rm",
+            "pattern": "[a-z]{2}"
+          },
+          "codice": {
+            "type": "string",
+            "description": "Codice ISTAT della provincia.",
+            "example": "058"
+          },
+          "regione": {
+            "type": "string",
+            "description": "Regione del provincia (in minuscolo).",
+            "example": "lazio"
           }
         }
       }

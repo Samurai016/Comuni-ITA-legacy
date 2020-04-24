@@ -78,7 +78,7 @@ const province = {
     "lecce":"puglia",
     "ravenna":"emilia romagna",
     "palermo":"sicilia",
-    "valle d'aosta":"valle d'aosta",
+    "aosta":"valle d'aosta",
     "fermo":"marche",
     "chieti":"abruzzo",
     "treviso":"veneto",
@@ -166,24 +166,23 @@ function getComuni(params) {
     }
 
     if (params["onlyname"]) {
-        comuni.forEach((c, index) => comuni[index] = c.nome);
+        comuni = comuni.map((c) => c.nome);
     }
 
     return new ApiResponse(200, comuni);
 }
 function getProvince(params) {
-    var output = [];
+    var output = JSON.parse(fs.readFileSync(`./province.json`, 'utf8'));
 
     if (params["regione"]) { // Handle regione
         if (!regioni.includes(params["regione"])) {
             return new ApiResponse(400, "Regione inesistente");
         }
-        Object.keys(province).forEach((provincia) => {
-            if (province[provincia]==params["regione"])
-                output.push(provincia);
-        })
-    } else {
-        output = Object.keys(province);
+        output = output.filter((p) => p.regione == params["regione"]);
+    }
+
+    if (params["onlyname"]) {
+        output = output.map((p) => p.nome);
     }
     
     return new ApiResponse(200, output);

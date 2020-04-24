@@ -5,7 +5,7 @@ info:
     Semplice API che permette di ottenere in formato JSON i comuni italiani.
     
     *Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*
-  version: 2.0.0
+  version: 2.1.0
   x-logo: 
     url: "./assets/logo.png"
     altText: "Comuni ITA Logo"
@@ -18,7 +18,7 @@ info:
     url: https://opensource.org/licenses/MIT
 externalDocs:
   description: Github
-  url: https://github.com/Samurai016/comuni-ita
+  url: https://github.com/Samurai016/Comuni-ITA
 servers:
 - url: https://comuni-ita.herokuapp.com
 - url: http://comuni-ita.herokuapp.com
@@ -97,6 +97,8 @@ paths:
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
   /api/province:
+    parameters:
+      - $ref: '#/components/parameters/onlyname'
     get:
       summary: Ottieni la lista di tutte le province italiane.
       operationId: province
@@ -110,12 +112,12 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-                  example: "roma"
+                  $ref: '#/components/schemas/Provincia'
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
   /api/province/{regione}:
     parameters:
+      - $ref: '#/components/parameters/onlyname'
       - $ref: '#/components/parameters/regione'
     get:
       summary: Ottieni la lista di tutte le province della regione indicata.
@@ -130,8 +132,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-                  example: "roma"
+                  $ref: '#/components/schemas/Provincia'
         400:
           description: Richiesta errata. Probabilmente uno dei parametri è errato.
         5XX:
@@ -162,22 +163,16 @@ components:
       required: true
       schema:
         type: string
-      description: |-
-        Nome della provincia di cui si vogliono i dati.  
-        Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
-        [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#province)
-      example: "l%27aquila"
+      description: Nome della provincia di cui si vogliono i dati.
+      example: "l'aquila"
     regione:
       in: path
       name: regione
       required: true
       schema:
         type: string
-      description: |-
-        Nome della regione di cui si vogliono i dati.  
-        Eventuali spazi o apostrofi vanno convertiti in notazione URL ([Link a W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)).  
-        [Qui per maggiori informazioni](https://github.com/Samurai016/Comuni-ITA/blob/master/README.md#regioni)
-      example: "valle%20d%27aosta"
+      description: Nome della regione di cui si vogliono i dati.
+      example: "valle d'aosta"
     onlyname:
       in: query
       name: onlyname
@@ -207,11 +202,6 @@ components:
           type: string
           description: Provincia del comune (in minuscolo, per esteso).
           example: "roma"
-        sigla:
-          type: string
-          description: Sigla della provincia del comune (in maiuscolo).
-          example: "RM"
-          pattern: "[A-Z]{2}"
         codiceCatastale:
           type: string
           description: Codice catastale del comune.
@@ -233,3 +223,23 @@ components:
               type: number
               description: Longitudine
               example: 12.4823243
+    Provincia:
+      type: object
+      properties:
+        nome:
+          type: string
+          description: Nome della provincia.
+          example: "roma"
+        sigla:
+          type: string
+          description: Sigla della provincia (in minuscolo).
+          example: "rm"
+          pattern: "[a-z]{2}"
+        codice:
+          type: string
+          description: Codice ISTAT della provincia.
+          example: "058"
+        regione:
+          type: string
+          description: Regione del provincia (in minuscolo).
+          example: "lazio"
