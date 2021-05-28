@@ -15,7 +15,8 @@
   ],
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "update": "node updater.js"
   },
   "author": "Nicolò Rebaioli <niko.reba@gmail.com> (https://rebaioli.altervista.org/)",
   "license": "MIT",
@@ -24,8 +25,10 @@
     "url": "https://github.com/Samurai016/Comuni-ITA.git"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-sslify": "^1.2.0"
+    "express-sslify": "^1.2.0",
+    "sqlite3": "^5.0.1"
   }
 }

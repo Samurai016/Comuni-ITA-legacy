@@ -193,7 +193,7 @@ function getRegioni(params) {
 
 // CONFIGURATION
 app.use(cors());
-app.use(enforce.HTTPS({ trustProtoHeader: true }));
+//app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 // ENDPOINTS 
 // Tutti i comuni

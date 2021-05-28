@@ -1,0 +1,13 @@
+/api/comuni					                320ms   660ms
+/api/comuni/lombardia			            40ms    13ms
+/api/comuni/provincia/lodi		            11ms    8ms
+/api/province					            5ms     4ms
+/api/province/lazio				            4ms     4ms
+/api/regioni					            5ms     3ms
+
+/api/comuni?onlyname=true			        30ms	38ms
+/api/comuni/lombardia?onlyname=true		    35ms	9ms
+/api/comuni/provincia/lodi?onlyname=true	11ms	7ms
+/api/province?onlyname=true			        5ms     3ms
+/api/province/lazio?onlyname=true		    5ms     3ms
+/api/regioni?onlyname=true			        4ms     3ms
