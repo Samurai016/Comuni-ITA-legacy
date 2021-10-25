@@ -29,6 +29,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
-    "sqlite3": "^5.0.1"
+    "node-fetch": "^2.6.5",
+    "xlsx": "^0.17.3"
   }
 }
