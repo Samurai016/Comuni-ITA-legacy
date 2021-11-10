@@ -1,6 +1,6 @@
 {
   "name": "comuni-ita",
-  "version": "2.1.0",
+  "version": "2.5.0",
   "description": "API to fetch data about italian municipalities",
   "keywords": [
     "api",
@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "update": "node updater.js"
+    "update": "node updater/updater.js"
   },
   "author": "Nicolò Rebaioli <niko.reba@gmail.com> (https://rebaioli.altervista.org/)",
   "license": "MIT",
@@ -25,11 +25,15 @@
     "url": "https://github.com/Samurai016/Comuni-ITA.git"
   },
   "dependencies": {
+    "adm-zip": "^0.5.9",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
     "node-fetch": "^2.6.5",
+    "node-telegram-bot-api": "^0.54.0",
+    "telegraf": "^4.4.2",
     "xlsx": "^0.17.3"
   }
 }

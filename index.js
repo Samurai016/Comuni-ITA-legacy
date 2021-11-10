@@ -3,139 +3,16 @@ const fs = require('fs');
 const cors = require('cors');
 const enforce = require('express-sslify');
 const app = express();
+const path = require('path');
+require('dotenv').config({path: path.resolve(__dirname+'\\..\\environment.env')});
 
 // HELPERS
-const province = {
-    "padova":"veneto",
-    "lodi":"lombardia",
-    "lecco":"lombardia",
-    "siena":"toscana",
-    "oristano":"sardegna",
-    "pescara":"abruzzo",
-    "milano":"lombardia",
-    "pistoia":"toscana",
-    "potenza":"basilicata",
-    "ragusa":"sicilia",
-    "foggia":"puglia",
-    "cuneo":"piemonte",
-    "matera":"basilicata",
-    "l'aquila":"abruzzo",
-    "rieti":"lazio",
-    "salerno":"campania",
-    "napoli":"campania",
-    "catania":"sicilia",
-    "frosinone":"lazio",
-    "cosenza":"calabria",
-    "brescia":"lombardia",
-    "pesaro e urbino":"marche",
-    "cremona":"lombardia",
-    "mantova":"lombardia",
-    "viterbo":"lazio",
-    "vibo valentia":"calabria",
-    "ascoli piceno":"marche",
-    "terni":"umbria",
-    "campobasso":"molise",
-    "isernia":"molise",
-    "bari":"puglia",
-    "caltanissetta":"sicilia",
-    "messina":"sicilia",
-    "alessandria":"piemonte",
-    "bergamo":"lombardia",
-    "rovigo":"veneto",
-    "verona":"veneto",
-    "roma":"lazio",
-    "reggio calabria":"calabria",
-    "piacenza":"emilia romagna",
-    "sassari":"sardegna",
-    "enna":"sicilia",
-    "asti":"piemonte",
-    "torino":"piemonte",
-    "belluno":"veneto",
-    "varese":"lombardia",
-    "monza e della brianza":"lombardia",
-    "novara":"piemonte",
-    "agrigento":"sicilia",
-    "ancona":"marche",
-    "vicenza":"veneto",
-    "udine":"friuli venezia giulia",
-    "avellino":"campania",
-    "caserta":"campania",
-    "biella":"piemonte",
-    "benevento":"campania",
-    "imperia":"liguria",
-    "trento":"trentino alto adige",
-    "pavia":"lombardia",
-    "vercelli":"piemonte",
-    "savona":"liguria",
-    "teramo":"abruzzo",
-    "sondrio":"lombardia",
-    "parma":"emilia romagna",
-    "como":"lombardia",
-    "catanzaro":"calabria",
-    "reggio emilia":"emilia romagna",
-    "trapani":"sicilia",
-    "bolzano":"trentino alto adige",
-    "lecce":"puglia",
-    "ravenna":"emilia romagna",
-    "palermo":"sicilia",
-    "aosta":"valle d'aosta",
-    "fermo":"marche",
-    "chieti":"abruzzo",
-    "treviso":"veneto",
-    "bologna":"emilia romagna",
-    "lucca":"toscana",
-    "la spezia":"liguria",
-    "pordenone":"friuli venezia giulia",
-    "barletta-andria-trani":"puglia",
-    "arezzo":"toscana",
-    "venezia":"veneto",
-    "verbano-cusio-ossola":"piemonte",
-    "macerata":"marche",
-    "latina":"lazio",
-    "sud sardegna":"sardegna",
-    "grosseto":"toscana",
-    "genova":"liguria",
-    "ferrara":"emilia romagna",
-    "nuoro":"sardegna",
-    "cagliari":"sardegna",
-    "perugia":"umbria",
-    "siracusa":"sicilia",
-    "massa-carrara":"toscana",
-    "taranto":"puglia",
-    "firenze":"toscana",
-    "forlì-cesena":"emilia romagna",
-    "modena":"emilia romagna",
-    "rimini":"emilia romagna",
-    "crotone":"calabria",
-    "livorno":"toscana",
-    "pisa":"toscana",
-    "brindisi":"puglia",
-    "prato":"toscana",
-    "gorizia":"friuli venezia giulia",
-    "trieste":"friuli venezia giulia"
-};
-const regioni = [
-    "veneto",
-    "lombardia",
-    "toscana",
-    "sardegna",
-    "abruzzo",
-    "basilicata",
-    "sicilia",
-    "puglia",
-    "piemonte",
-    "lazio",
-    "campania",
-    "calabria",
-    "marche",
-    "umbria",
-    "molise",
-    "emilia romagna",
-    "friuli venezia giulia",
-    "liguria",
-    "trentino alto adige",
-    "valle d'aosta"
-];
+const provinceJson = JSON.parse(fs.readFileSync(`./province.json`, 'utf8'));
+const province = {};
+provinceJson.forEach(provincia => {
+    province[provincia.nome] = provincia.regione;
+});
+const regioni = JSON.parse(fs.readFileSync(`./regioni.json`, 'utf8'));
 function ApiResponse(status, data) {
     this.status = status;
     this.data = data;
@@ -193,7 +70,8 @@ function getRegioni(params) {
 
 // CONFIGURATION
 app.use(cors());
-//app.use(enforce.HTTPS({ trustProtoHeader: true }));
+if (process.env.ENABLE_HTTPS)
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 // ENDPOINTS 
 // Tutti i comuni
