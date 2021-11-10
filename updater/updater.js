@@ -34,7 +34,7 @@ function sanitizeProvincia(name) {
     return (match ? match[1] : name)?.trim().toLowerCase();
 }
 function sanitizeRegione(name) {
-    return sanitizeProvincia(name).replaceAll('-', ' ');
+    return sanitizeProvincia(name)?.replaceAll('-', ' ');
 }
 function sanitizeCap(cap) {
     const match = /^"?(?<cap>\d+)/.exec(cap);
@@ -79,6 +79,7 @@ function sanitizeForTelegram(text) {
     const buffer = await fetch("https://www.istat.it/storage/codici-unita-amministrative/Elenco-comuni-italiani.xls").then(res => res.buffer());
     const workbook = xlsx.read(buffer);
     const csv = xlsx.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]).split('\n');
+    console.log('[Updater][Log]' + csv);
     //#endregion
 
     //#region Reading file and mapping
