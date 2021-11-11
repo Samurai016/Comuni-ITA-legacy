@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname+'\\..\\environment.env')});
 
-const usersPath = __dirname+'\\telegram_chats.json';
 const strings = {
     'welcome': `🎉 *Benvenuto!*\nTi sei registrato al logger dell'API [comuni-ita](https://comuni-ita.herokuapp.com/).\nQuando l'API si aggiornerà riceverai dei log e ti verrà chiesto di risolvere i conflitti.`,
     'notSubscribed': `‼ *Attenzione!*\nNon sei registrato\.\nEsegui il comando /start per registrarti.`,
@@ -108,8 +107,7 @@ module.exports.TelegramBot = class TelegramBot {
             if (options.cleanup) {
                 try {
                     instance.bot.stop(exitCode);
-                    fs.writeFileSync(usersPath, JSON.stringify(Array.from(instance.users)));
-                    instance.log('Bot turn off');
+                    instance.log('[Telegram Bot] Bot turn off');
                 } catch (error) { }
             }
             if (options.exit) {

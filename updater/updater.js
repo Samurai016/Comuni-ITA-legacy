@@ -79,7 +79,6 @@ function sanitizeForTelegram(text) {
     const buffer = await fetch("https://www.istat.it/storage/codici-unita-amministrative/Elenco-comuni-italiani.xls").then(res => res.buffer());
     const workbook = xlsx.read(buffer);
     const csv = xlsx.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]).split('\n');
-    console.log('[Updater][Log]' + csv);
     //#endregion
 
     //#region Reading file and mapping
