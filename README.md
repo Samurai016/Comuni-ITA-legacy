@@ -1,9 +1,17 @@
 # [Comuni ITA API](https://comuni-ita.herokuapp.com/)
 ![Versione](https://img.shields.io/github/package-json/v/Samurai016/comuni-ita?label=versione&style=flat-square)
 [![Hosted on Heroku](https://img.shields.io/badge/Hosted%20on%20Heroku-passing?style=flat-square&logo=heroku&labelColor=430098&color=430098)](https://comuni-ita.herokuapp.com/)
-[![Leggi la documentazione](https://img.shields.io/badge/Leggi%20la%20documentazione-passing?style=flat-square&logo=Read%20the%20Docs&labelColor=8CA1AF&color=8CA1AF&logoColor=white)](https://comuni-ita.herokuapp.com/)
+[![Leggi la documentazione](https://img.shields.io/badge/Leggi%20la%20documentazione%20Swagger-passing?style=flat-square&logo=Read%20the%20Docs&labelColor=8CA1AF&color=8CA1AF&logoColor=white)](https://comuni-ita.herokuapp.com/)
 
-Semplice API che permette di ottenere in formato JSON i comuni italiani.
+Tramite questa REST API hai accesso ad una lista di tutti i comuni, le province e le regioni italiane. I dati sono ottenuti e aggiornamenti da un sistema di aggiornamento semiautomatico che preleva i dati direttamente dagli archivi ISTAT e integra le informazioni mancanti interrogando Wikidata.
+I dati non ottenuti automaticamente dal sistema vengono inoltrati direttamente a me che procedo a verificarli e modificarli manualmente.
+
+L'API è scaricabile e installabile su un server proprietario oppure è usufruibile in maniera gratuita all'indirizzo https://comuni-ita.herokuapp.com/.
+Dato che l'API è hostata su un servizio gratuito sarebbe opportuno evitare di sovraccaricare l'API per dare a tutti la possibilità di accedervi.
+
+In questa wiki troverai una spiegazione di come funzionano gli endpoint e di come installare l'API su un server.
+
+La documentazione è disponibile anche all'indirizzo https://comuni-ita.herokuapp.com/ sotto forma di documentazione Swagger.
 
 **License:** [MIT](https://opensource.org/licenses/MIT)  
 **Credits:** Logo inpired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)
