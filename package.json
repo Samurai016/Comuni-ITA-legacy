@@ -1,6 +1,6 @@
 {
   "name": "comuni-ita",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "description": "API to fetch data about italian municipalities",
   "keywords": [
     "api",
@@ -28,12 +28,12 @@
     "node": "15.x"
   },
   "dependencies": {
-    "adm-zip": "^0.5.9",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
+    "mysql2": "^2.3.3-rc.0",
     "node-fetch": "^2.6.5",
     "node-telegram-bot-api": "^0.54.0",
     "telegraf": "^4.4.2",

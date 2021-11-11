@@ -1,24 +1,24 @@
 const Telegraf = require('telegraf').Telegraf;
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config({path: path.resolve(__dirname+'\\..\\environment.env')});
+require('dotenv').config({ path: path.resolve(__dirname + '\\..\\environment.env') });
 
 const strings = {
-    'welcome': `🎉 *Benvenuto!*\nTi sei registrato al logger dell'API [comuni-ita](https://comuni-ita.herokuapp.com/).\nQuando l'API si aggiornerà riceverai dei log e ti verrà chiesto di risolvere i conflitti.`,
+    'welcome': `🎉 *Benvenuto!*\nTi sei registrato al logger dell'API [comuni-ita](https://comuni-ita.herokuapp.com/).\nQuando l'API si aggiornerà riceverai dei log e ti verrà chiesto di risolvere i conflitti.\nIl tuo chat ID è: *%s*`,
     'notSubscribed': `‼ *Attenzione!*\nNon sei registrato\.\nEsegui il comando /start per registrarti.`,
     'unsubscribed': `❌ Ti sei disiscritto. Non riceverai più aggiornamenti.`
 };
-    
+
 module.exports.TelegramBot = class TelegramBot {
     constructor(onStopUpdate) {
-        console.log('[Telegram Bot] Bot starting');
+        this.log('Bot starting');
         this.bot = new Telegraf(process.env.BOT_KEY);
-        this.users = new Set();
+        this.user = null;
         this.replyBuffer = new Map();
         this.onStopUpdate = onStopUpdate;
 
         if (process.env.TELEGRAM_CHAT)
-            this.users.add(Number.parseInt(process.env.TELEGRAM_CHAT));
+            this.user = Number.parseInt(process.env.TELEGRAM_CHAT);
 
         this.bot.start((ctx) => this.onStart(ctx));
         this.bot.command('unsubscribe', (ctx) => this.onUnsubscribe(ctx));
@@ -27,7 +27,10 @@ module.exports.TelegramBot = class TelegramBot {
         this.onDismiss();
 
         this.bot.launch();
-        console.log(`[Telegram Bot] Bot started with ${this.users.size} users`);
+        if (this.user)
+            this.log(`Bot started with a connected user`);
+        else
+            this.log(`Bot started without connected user`);
     }
 
     waitForReply(text, validateReply) {
@@ -43,9 +46,8 @@ module.exports.TelegramBot = class TelegramBot {
     }
 
     async sendText(text, options) {
-        const users = Array.from(this.users);
-        for (let i = 0; i < users.length; i++) {
-            const message = await this.bot.telegram.sendMessage(users[i], text, {
+        if (this.user) {
+            const message = await this.bot.telegram.sendMessage(this.user, text, {
                 parse_mode: 'MarkdownV2'
             });
             if (options)
@@ -53,13 +55,11 @@ module.exports.TelegramBot = class TelegramBot {
         }
     }
 
-    async sendFile(url, caption, options) {
-        const users = Array.from(this.users);
-        for (let i = 0; i < users.length; i++) {
-            const data = fs.readFileSync(url);
-            const message = await this.bot.telegram.sendDocument(users[i], {
-                source: data,
-                filename: path.basename(url)
+    async sendBytes(bytes, filename, caption, options) {
+        if (this.user) {
+            const message = await this.bot.telegram.sendDocument(this.user, {
+                source: bytes,
+                filename: filename
             }, {
                 caption: caption,
                 parse_mode: 'MarkdownV2'
@@ -69,16 +69,20 @@ module.exports.TelegramBot = class TelegramBot {
         }
     }
 
+    async sendFile(url, caption, options) {
+        const data = fs.readFileSync(url);
+        await this.sendBytes(data, path.basename(url), caption, options);
+    }
+
     async onStart(ctx) {
         const chat = await ctx.getChat();
-        this.users.add(chat.id);
-        await ctx.replyWithMarkdown(strings.welcome);
+        this.user = chat.id;
+        await ctx.replyWithMarkdown(strings.welcome.replace('%s', chat.id));
         this.log(`User subscribed`);
     }
 
     async onUnsubscribe(ctx) {
-        const chat = await ctx.getChat();
-        this.users.delete(chat.id);
+        this.user = null;
         await ctx.replyWithMarkdown(strings.unsubscribed);
         this.log('User unsubscribed');
     }
@@ -107,7 +111,7 @@ module.exports.TelegramBot = class TelegramBot {
             if (options.cleanup) {
                 try {
                     instance.bot.stop(exitCode);
-                    instance.log('[Telegram Bot] Bot turn off');
+                    instance.log('Bot turn off');
                 } catch (error) { }
             }
             if (options.exit) {
@@ -129,7 +133,7 @@ module.exports.TelegramBot = class TelegramBot {
 
     async checkSubscribe(ctx) {
         const chat = await ctx.getChat();
-        if (!this.users.has(chat.id)) {
+        if (!this.user) {
             await ctx.replyWithMarkdown(strings.notSubscribed);
             return false;
         }
