@@ -3,7 +3,7 @@
   "info": {
     "title": "Comuni ITA",
     "description": "Semplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
-    "version": "2.1.0",
+    "version": "2.7.0",
     "x-logo": {
       "url": "./assets/logo.png",
       "altText": "Comuni ITA Logo"
@@ -49,6 +49,9 @@
       "parameters": [
         {
           "$ref": "#/components/parameters/onlyname"
+        },
+        {
+          "$ref": "#/components/parameters/onlyforeignname"
         }
       ],
       "get": {
@@ -85,6 +88,9 @@
         },
         {
           "$ref": "#/components/parameters/onlyname"
+        },
+        {
+          "$ref": "#/components/parameters/onlyforeignname"
         }
       ],
       "get": {
@@ -123,6 +129,9 @@
         },
         {
           "$ref": "#/components/parameters/onlyname"
+        },
+        {
+          "$ref": "#/components/parameters/onlyforeignname"
         }
       ],
       "get": {
@@ -283,6 +292,15 @@
         },
         "description": "Può essere un valore qualunque.  \nIn caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi dei comuni selezionati.",
         "example": true
+      },
+      "onlyforeignname": {
+        "in": "query",
+        "name": "onlyforeignname",
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Può essere un valore qualunque.  \nIn caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi stranieri dei comuni selezionati.\nSe il comune non ha un nome straniero verrà utilizzato il nome italiano.\nSe usato insieme a onlyname, quest'ultimo viene ignorato.",
+        "example": true
       }
     },
     "schemas": {
@@ -292,33 +310,33 @@
           "nome": {
             "type": "string",
             "description": "Nome del comune.",
-            "example": "Roma"
+            "example": "Bolzano"
+          },
+          "nomeStraniero": {
+            "type": "string",
+            "description": "Nome straniero del comune.",
+            "example": "Bozen"
           },
           "codice": {
             "type": "string",
             "description": "Codice ISTAT del comune.",
-            "example": "058091"
-          },
-          "regione": {
-            "type": "string",
-            "description": "Regione del comune (in minuscolo).",
-            "example": "lazio"
+            "example": "021008"
           },
           "provincia": {
             "type": "string",
-            "description": "Provincia del comune (in minuscolo, per esteso).",
-            "example": "roma"
+            "description": "Codice della provincia del comune.",
+            "example": "021"
           },
           "codiceCatastale": {
             "type": "string",
             "description": "Codice catastale del comune.",
-            "example": "H501",
+            "example": "A952",
             "pattern": "[A-Z]\\d{3}"
           },
           "cap": {
             "type": "string",
             "description": "Codice di Avviamento Postale (CAP) del comune.",
-            "example": "00118",
+            "example": "39100",
             "pattern": "\\d{5}"
           },
           "coordinate": {
@@ -327,12 +345,12 @@
               "lat": {
                 "type": "number",
                 "description": "Latitudine",
-                "example": 41.8954656
+                "example": 46.5
               },
               "lng": {
                 "type": "number",
                 "description": "Longitudine",
-                "example": 12.4823243
+                "example": 11.350000381469727
               }
             }
           }

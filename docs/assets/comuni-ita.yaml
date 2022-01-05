@@ -3,12 +3,12 @@ info:
   title: Comuni ITA
   description: |-
     Semplice API che permette di ottenere in formato JSON i comuni italiani.
-    
+
     *Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*
-  version: 2.1.0
-  x-logo: 
-    url: "./assets/logo.png"
-    altText: "Comuni ITA Logo"
+  version: 2.7.0
+  x-logo:
+    url: ./assets/logo.png
+    altText: Comuni ITA Logo
   contact:
     name: Nicolò Rebaioli
     email: niko.reba@gmail.com
@@ -20,8 +20,8 @@ externalDocs:
   description: Github
   url: https://github.com/Samurai016/Comuni-ITA
 servers:
-- url: https://comuni-ita.herokuapp.com
-- url: http://comuni-ita.herokuapp.com
+  - url: https://comuni-ita.herokuapp.com
+  - url: http://comuni-ita.herokuapp.com
 tags:
   - name: comuni
     description: Endpoint che restituiscono comuni
@@ -33,6 +33,7 @@ paths:
   /api/comuni:
     parameters:
       - $ref: '#/components/parameters/onlyname'
+      - $ref: '#/components/parameters/onlyforeignname'
     get:
       summary: Ottieni la lista di tutti i comuni italiani.
       description: |-
@@ -40,9 +41,9 @@ paths:
         Ora quell'URL è deprecato, rimarrà disponibile, ma si consiglia l'aggiornamento dei propri progetti al nuovo URL.**
       operationId: comuni
       tags:
-          - comuni
+        - comuni
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -56,13 +57,14 @@ paths:
     parameters:
       - $ref: '#/components/parameters/regione'
       - $ref: '#/components/parameters/onlyname'
+      - $ref: '#/components/parameters/onlyforeignname'
     get:
       summary: Ottieni la lista di tutti i comuni della regione indicata.
       operationId: comuni-regione
       tags:
-          - comuni
+        - comuni
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -70,7 +72,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Comune'
-        400:
+        '400':
           description: Richiesta errata. Probabilmente uno dei parametri è errato.
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
@@ -78,13 +80,14 @@ paths:
     parameters:
       - $ref: '#/components/parameters/provincia'
       - $ref: '#/components/parameters/onlyname'
+      - $ref: '#/components/parameters/onlyforeignname'
     get:
       summary: Ottieni la lista di tutti i comuni della provincia indicata.
       operationId: comuni-provincia
       tags:
-          - comuni
+        - comuni
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -92,7 +95,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Comune'
-        400:
+        '400':
           description: Richiesta errata. Probabilmente uno dei parametri è errato.
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
@@ -103,9 +106,9 @@ paths:
       summary: Ottieni la lista di tutte le province italiane.
       operationId: province
       tags:
-          - province
+        - province
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -123,9 +126,9 @@ paths:
       summary: Ottieni la lista di tutte le province della regione indicata.
       operationId: province-regione
       tags:
-          - province
+        - province
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -133,7 +136,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Provincia'
-        400:
+        '400':
           description: Richiesta errata. Probabilmente uno dei parametri è errato.
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
@@ -142,9 +145,9 @@ paths:
       summary: Ottieni la lista delle regioni italiane.
       operationId: regioni
       tags:
-          - regioni
+        - regioni
       responses:
-        200:
+        '200':
           description: L'operazione ha avuto successo.
           content:
             application/json:
@@ -152,7 +155,7 @@ paths:
                 type: array
                 items:
                   type: string
-                  example: "lazio"
+                  example: lazio
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
 components:
@@ -164,7 +167,7 @@ components:
       schema:
         type: string
       description: Nome della provincia di cui si vogliono i dati.
-      example: "l'aquila"
+      example: l'aquila
     regione:
       in: path
       name: regione
@@ -172,15 +175,26 @@ components:
       schema:
         type: string
       description: Nome della regione di cui si vogliono i dati.
-      example: "valle d'aosta"
+      example: valle d'aosta
     onlyname:
       in: query
       name: onlyname
       schema:
         type: boolean
-      description: |- 
+      description: |-
         Può essere un valore qualunque.  
         In caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi dei comuni selezionati.
+      example: true
+    onlyforeignname:
+      in: query
+      name: onlyforeignname
+      schema:
+        type: boolean
+      description: |-
+        Può essere un valore qualunque.  
+        In caso il parametro abbia un valore, il risultato della query sarà un array di stringhe, tali stringhe rappresentano i nomi stranieri dei comuni selezionati.
+        Se il comune non ha un nome straniero verrà utilizzato il nome italiano.
+        Se usato insieme a onlyname, quest'ultimo viene ignorato.
       example: true
   schemas:
     Comune:
@@ -189,57 +203,57 @@ components:
         nome:
           type: string
           description: Nome del comune.
-          example: "Roma"
+          example: Bolzano
+        nomeStraniero:
+          type: string
+          description: Nome straniero del comune.
+          example: Bozen
         codice:
           type: string
           description: Codice ISTAT del comune.
-          example: "058091"
-        regione:
-          type: string
-          description: Regione del comune (in minuscolo).
-          example: "lazio"
+          example: '021008'
         provincia:
           type: string
-          description: Provincia del comune (in minuscolo, per esteso).
-          example: "roma"
+          description: Codice della provincia del comune.
+          example: '021'
         codiceCatastale:
           type: string
           description: Codice catastale del comune.
-          example: "H501"
-          pattern: "[A-Z]\\d{3}"
+          example: 'A952'
+          pattern: '[A-Z]\d{3}'
         cap:
           type: string
           description: Codice di Avviamento Postale (CAP) del comune.
-          example: "00118"
-          pattern: "\\d{5}" 
+          example: '39100'
+          pattern: \d{5}
         coordinate:
           type: object
           properties:
             lat:
               type: number
               description: Latitudine
-              example: 41.8954656
+              example: 46.5
             lng:
               type: number
               description: Longitudine
-              example: 12.4823243
+              example: 11.350000381469727
     Provincia:
       type: object
       properties:
         nome:
           type: string
           description: Nome della provincia.
-          example: "roma"
+          example: roma
         sigla:
           type: string
           description: Sigla della provincia (in minuscolo).
-          example: "rm"
-          pattern: "[a-z]{2}"
+          example: rm
+          pattern: '[a-z]{2}'
         codice:
           type: string
           description: Codice ISTAT della provincia.
-          example: "058"
+          example: '058'
         regione:
           type: string
           description: Regione del provincia (in minuscolo).
-          example: "lazio"
+          example: lazio

@@ -12,8 +12,8 @@ String.prototype.capitalize = function () {
 function getCoords(point) {
     const match = /Point\((.+) (.+)\)/gm.exec(point);
     return match ? {
-        lat: match[1],
-        lng: match[2],
+        lng: match[1],
+        lat: match[2],
     } : {};
 }
 function sanitizeProvincia(name) {
@@ -86,8 +86,10 @@ function sanitizeForTelegram(text) {
             const comune = csv[i].split(',');
             if (comune[5]) {
                 codiciIstat.push(comune[3]);
+                const nome = comune[5]?.trim();
                 comuni.push({
-                    "nome": comune[5]?.trim(),
+                    "nome": nome.indexOf('/')>=0 ? nome.substring(0, nome.indexOf('/')) : nome,
+                    "nomeStraniero": nome.substring(nome.indexOf('/')+1) || null,
                     "codice": comune[4]?.trim(),
                     "codiceCatastale": comune[19]?.trim(),
                     "regione": sanitizeRegione(comune[10]),
@@ -210,7 +212,7 @@ function sanitizeForTelegram(text) {
 
         for (let i = 0; i < comuniSorted.length; i++) {
             const comune = comuniSorted[i];
-            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?)', [comune.codice, comune.nome, comune.codiceCatastale, comune.cap, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
+            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?)', [comune.codice, comune.nome, comune.nomeStraniero, comune.codiceCatastale, comune.cap, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
         }
 
         await bot.sendBytes(

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Gen 05, 2022 alle 23:37
+-- Creato il: Gen 06, 2022 alle 00:37
 -- Versione del server: 10.4.19-MariaDB
 -- Versione PHP: 7.3.28
 
@@ -32,6 +32,7 @@ USE `comuni-ita`;
 CREATE TABLE `comuni` (
   `codice` varchar(10) NOT NULL,
   `nome` varchar(100) NOT NULL,
+  `nomeStraniero` varchar(100) DEFAULT NULL,
   `codiceCatastale` varchar(5) DEFAULT NULL,
   `cap` char(5) DEFAULT NULL,
   `lat` float DEFAULT NULL,

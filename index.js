@@ -20,11 +20,11 @@ require('dotenv').config();
             this.data = data;
         }
     }
-    async function getFromDb(query, params, onlyname) {
+    async function getFromDb(query, params, field) {
         const res = (await db.execute(query, params))[0];
-        return onlyname ? res.map((item) => item.nome) : res;
+        return field ? res.map((item) => field=='nomeStraniero' ? (item[field] || item['nome']) : item[field]) : res;
     }
-    const regioni = await getFromDb('SELECT * FROM regioni', null, true);
+    const regioni = await getFromDb('SELECT * FROM regioni ORDER BY nome', null, 'nome');
 
     // HANDLERS
     async function getComuni(params) {
@@ -48,8 +48,23 @@ require('dotenv').config();
             query += ' WHERE r.nome=?';
             queryParams.push(params["regione"]);
         }
+        query += ' ORDER BY c.nome';
 
-        return new ApiResponse(200, await getFromDb(query, queryParams, params["onlyname"]));
+        var field = null;
+        if (params["onlyname"]) field = 'nome';
+        if (params["onlyforeignname"]) field = 'nomeStraniero';
+
+        var result = await getFromDb(query, queryParams, field);
+        for (let i = 0; i < result.length; i++) {
+            result[i].coordinate = {
+                lat: result[i].lat,
+                lng: result[i].lng
+            };
+            delete result[i].lat;
+            delete result[i].lng;
+        }
+
+        return new ApiResponse(200, result);
     }
     async function getProvince(params) {
         // Tutte le keys a lowercase
@@ -65,8 +80,9 @@ require('dotenv').config();
             query += ' WHERE regione=?';
             queryParams.push(params["regione"]);
         }
+        query += ' ORDER BY nome';
 
-        return new ApiResponse(200, await getFromDb(query, queryParams, params["onlyname"]));
+        return new ApiResponse(200, await getFromDb(query, queryParams, params["onlyname"] ? 'nome' : null));
     }
     async function getRegioni(params) {
         return new ApiResponse(200, regioni);
