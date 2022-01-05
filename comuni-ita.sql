@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Nov 11, 2021 alle 23:07
+-- Creato il: Gen 05, 2022 alle 23:37
 -- Versione del server: 10.4.19-MariaDB
 -- Versione PHP: 7.3.28
 
@@ -70,6 +70,7 @@ CREATE TABLE `regioni` (
 -- Indici per le tabelle `comuni`
 --
 ALTER TABLE `comuni`
+  ADD PRIMARY KEY (`codice`),
   ADD KEY `foregin_comuni_province` (`provincia`);
 
 --
