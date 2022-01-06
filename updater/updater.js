@@ -132,8 +132,8 @@ function sanitizeForTelegram(text) {
             for (let i = 0; i < comuni.length; i++) {
                 const comune = map.get(comuni[i].codice);
                 if (comune) {
-                    comuni[i].cap = sanitizeCap(comune[1]);
-                    comuni[i].coordinate = getCoords(comune[2]);
+                    comuni[i].cap = sanitizeCap(comune.slice(0, comune.length-1).join(','));
+                    comuni[i].coordinate = getCoords(comune[comune.length-1]);
                 } else {
                     comuniWithProblems.set(i, comuni[i]);
                 }
