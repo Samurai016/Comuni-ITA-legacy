@@ -27,6 +27,10 @@ function sanitizeCap(cap) {
     const match = /^"?(?<cap>\d+)/.exec(cap);
     return match ? match[1] : cap;
 }
+function sanitizePrefisso(prefisso) {
+    const match = /^\d+/.exec(prefisso?.trim());
+    return match ? match[0] : prefisso?.trim();
+}
 function sanitizeForTelegram(text) {
     const escapes = ['!', '-', '.'];
     for (let i = 0; i < escapes.length; i++) {
@@ -113,9 +117,9 @@ function sanitizeForTelegram(text) {
         //#endregion
 
         //#region Fetching extra data
-        // https://query.wikidata.org/#SELECT%20%3Fistat%20%3Fcap%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D
+        // https://query.wikidata.org/#SELECT%20%3Fistat%20%3Fcap%20%3Fprefisso%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279%2a%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP473%20%3Fprefisso.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D
         console.log('[Updater] Fetching extra data');
-        const url = 'https://query.wikidata.org/sparql?query=SELECT%20%3Fistat%20%3Fcap%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279*%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20%22it%22.%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D';
+        const url = 'https://query.wikidata.org/sparql?query=SELECT%20%3Fistat%20%3Fcap%20%3Fprefisso%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279%2a%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP473%20%3Fprefisso.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D';
         const responseBuffer = await fetch(url, { headers: { 'Accept': 'text/csv' } }).then(res => res.buffer());
         const comuniWithProblems = new Map();
         try {
@@ -124,15 +128,26 @@ function sanitizeForTelegram(text) {
             const wikiLines = responseBuffer.toString().split('\r\n');
             for (let i = 1; i < wikiLines.length; i++) {
                 const wikiLine = wikiLines[i].split(',');
-                if (!map.has(wikiLine[0]))
+                if (!map.has(wikiLine[0])) {
                     map.set(wikiLine[0], wikiLine);
+                } else {
+                    // Integrate the information
+                    var currentData = map.get(wikiLine[0]);
+                    for (let j = 1; j < currentData.length; j++) {
+                        if (currentData[j]=='' && wikiLine[j]) {
+                            currentData[j] = wikiLine[j];
+                            map.set(currentData[0], currentData);
+                        }
+                    }
+                }
             }
 
             // Binding data
             for (let i = 0; i < comuni.length; i++) {
                 const comune = map.get(comuni[i].codice);
                 if (comune) {
-                    comuni[i].cap = sanitizeCap(comune.slice(1, comune.length-1).join(','));
+                    comuni[i].cap = sanitizeCap(comune.slice(1, comune.length-2).join(','));
+                    comuni[i].prefisso = sanitizePrefisso(comune[comune.length-2]);
                     comuni[i].coordinate = getCoords(comune[comune.length-1]);
                 } else {
                     comuniWithProblems.set(i, comuni[i]);
@@ -159,18 +174,19 @@ function sanitizeForTelegram(text) {
                     `Codice ISTAT: _${comune.codice}_\n` +
                     `Codice catasto: _${comune.codiceCatastale}_\n\n` +
                     `Rispondi a questo messaggio inviando *CAP* e *coordinate* in questo modo:\n` +
-                    '`cap, Point(lat lon)`'
+                    '`cap, prefisso, Point(lng lat)`'
                 ), async (rep) => {
-                    const success = /(\d+), ?(.+)/gm.exec(rep.update.message.text.trim());
+                    const success = /(\d+), ?(\d+), ?(.+)/gm.exec(rep.update.message.text.trim());
                     if (!success) await bot.sendText(`Dato non valido`);
                     return success;
                 });
 
                 if (reply) {
-                    const match = /(\d+), ?(.+)/gm.exec(reply.update.message.text.trim());
+                    const match = /(\d+), ?(\d+), ?(.+)/gm.exec(reply.update.message.text.trim());
                     if (match) {
                         comuni[comuniWithProblemsKeys[i]].cap = sanitizeCap(match[1]);
-                        comuni[comuniWithProblemsKeys[i]].coordinate = getCoords(match[2]);
+                        comuni[comuniWithProblemsKeys[i]].prefisso = sanitizePrefisso(match[2]);
+                        comuni[comuniWithProblemsKeys[i]].coordinate = getCoords(match[3]);
                         success = true;
                     }
                 }
@@ -214,7 +230,7 @@ function sanitizeForTelegram(text) {
 
         for (let i = 0; i < comuniSorted.length; i++) {
             const comune = comuniSorted[i];
-            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?)', [comune.codice || null, comune.nome || null, comune.nomeStraniero || null, comune.codiceCatastale || null, comune.cap || null, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
+            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?,?)', [comune.codice || null, comune.nome || null, comune.nomeStraniero || null, comune.codiceCatastale || null, comune.cap || null, comune.prefisso || null, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
         }
 
         await bot.sendBytes(
