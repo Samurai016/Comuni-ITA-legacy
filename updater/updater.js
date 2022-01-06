@@ -89,7 +89,7 @@ function sanitizeForTelegram(text) {
                 const nome = comune[5]?.trim();
                 comuni.push({
                     "nome": nome.indexOf('/')>=0 ? nome.substring(0, nome.indexOf('/')) : nome,
-                    "nomeStraniero": nome.substring(nome.indexOf('/')+1) || null,
+                    "nomeStraniero": nome.indexOf('/')>=0 ? nome.substring(nome.indexOf('/')+1) : null,
                     "codice": comune[4]?.trim(),
                     "codiceCatastale": comune[19]?.trim(),
                     "regione": sanitizeRegione(comune[10]),
@@ -124,7 +124,8 @@ function sanitizeForTelegram(text) {
             const wikiLines = responseBuffer.toString().split('\r\n');
             for (let i = 1; i < wikiLines.length; i++) {
                 const wikiLine = wikiLines[i].split(',');
-                map.set(wikiLine[0], wikiLine);
+                if (!map.has(wikiLine[0]))
+                    map.set(wikiLine[0], wikiLine);
             }
 
             // Binding data
@@ -139,6 +140,7 @@ function sanitizeForTelegram(text) {
             }
         } catch (err) {
             console.error('Error');
+            console.error(err);
         }
         //#endregion
 
@@ -212,7 +214,7 @@ function sanitizeForTelegram(text) {
 
         for (let i = 0; i < comuniSorted.length; i++) {
             const comune = comuniSorted[i];
-            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?)', [comune.codice, comune.nome, comune.nomeStraniero, comune.codiceCatastale, comune.cap, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
+            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?)', [comune.codice || null, comune.nome || null, comune.nomeStraniero || null, comune.codiceCatastale || null, comune.cap || null, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
         }
 
         await bot.sendBytes(
