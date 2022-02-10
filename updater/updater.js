@@ -18,7 +18,7 @@ function getCoords(point) {
 }
 function sanitizeProvincia(name) {
     const match = /(.+)\/.+/.exec(name);
-    return (match ? match[1] : name)?.trim().toLowerCase();
+    return (match ? match[1] : name)?.trim();
 }
 function sanitizeRegione(name) {
     return sanitizeProvincia(name)?.replaceAll('-', ' ');
