@@ -25,6 +25,7 @@ require('dotenv').config();
         return field ? res.map((item) => field=='nomeStraniero' ? (item[field] || item['nome']) : item[field]) : res;
     }
     const regioni = await getFromDb('SELECT * FROM regioni ORDER BY nome', null, 'nome');
+    const regioniLowercase = regioni.map(r => r.toLowerCase());
 
     // HANDLERS
     async function getComuni(params) {
@@ -35,17 +36,17 @@ require('dotenv').config();
         var queryParams = [];
 
         if (params["provincia"]) { // Handle provincia
-            if ((await getFromDb('SELECT nome FROM province WHERE nome=?', [params["provincia"]])).length<1) {
+            if ((await getFromDb('SELECT nome FROM province WHERE LOWER(nome)=?', [params["provincia"]])).length<1) {
                 return new ApiResponse(400, "Provincia inesistente");
             }
             query += ' WHERE p.nome=?';
             queryParams.push(params["provincia"]);
         }
         else if (params["regione"]) { // Handle regione
-            if (!regioni.includes(params["regione"])) {
+            if (!regioniLowercase.includes(params["regione"])) {
                 return new ApiResponse(400, "Regione inesistente");
             }
-            query += ' WHERE r.nome=?';
+            query += ' WHERE LOWER(r.nome)=?';
             queryParams.push(params["regione"]);
         }
         query += ' ORDER BY c.nome';
@@ -74,10 +75,10 @@ require('dotenv').config();
         var queryParams = [];
 
         if (params["regione"]) { // Handle regione
-            if (!regioni.includes(params["regione"])) {
+            if (!regioniLowercase.includes(params["regione"])) {
                 return new ApiResponse(400, "Regione inesistente");
             }
-            query += ' WHERE regione=?';
+            query += ' WHERE LOWER(regione)=?';
             queryParams.push(params["regione"]);
         }
         query += ' ORDER BY nome';
