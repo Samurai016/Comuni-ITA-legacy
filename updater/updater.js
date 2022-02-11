@@ -105,7 +105,7 @@ function sanitizeForTelegram(text) {
                 province.set(comune[2]?.trim(), {
                     "nome": sanitizeProvincia(comune[11]),
                     "codice": comune[2]?.trim(),
-                    "sigla": comune[14]?.trim().toLowerCase(),
+                    "sigla": comune[14]?.trim().toUpperCase(),
                     "regione": sanitizeRegione(comune[10]),
                 });
             }

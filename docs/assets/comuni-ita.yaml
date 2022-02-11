@@ -5,7 +5,7 @@ info:
     Semplice API che permette di ottenere in formato JSON i comuni italiani.
 
     *Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*
-  version: 2.8.1
+  version: 2.8.2
   x-logo:
     url: ./assets/logo.png
     altText: Comuni ITA Logo
@@ -155,7 +155,7 @@ paths:
                 type: array
                 items:
                   type: string
-                  example: trentino alto adige
+                  example: Trentino Alto Adige
         5XX:
           description: Errore del server. **Contattare lo sviluppatore.**
 components:
@@ -167,7 +167,7 @@ components:
       schema:
         type: string
       description: Nome della provincia di cui si vogliono i dati.
-      example: l'aquila
+      example: L'Aquila
     regione:
       in: path
       name: regione
@@ -175,7 +175,7 @@ components:
       schema:
         type: string
       description: Nome della regione di cui si vogliono i dati.
-      example: valle d'aosta
+      example: Valle d'Aosta
     onlyname:
       in: query
       name: onlyname
@@ -248,17 +248,17 @@ components:
         nome:
           type: string
           description: Nome della provincia.
-          example: bolzano
+          example: Bolzano
         sigla:
           type: string
-          description: Sigla della provincia (in minuscolo).
-          example: bz
-          pattern: '[a-z]{2}'
+          description: Sigla della provincia (in maiuscolo).
+          example: BZ
+          pattern: '[A-Z]{2}'
         codice:
           type: string
           description: Codice ISTAT della provincia.
           example: '021'
         regione:
           type: string
-          description: Regione del provincia (in minuscolo).
-          example: trentino alto adige
+          description: Regione del provincia.
+          example: Trentino Alto Adige
