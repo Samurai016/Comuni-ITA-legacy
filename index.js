@@ -22,7 +22,7 @@ require('dotenv').config();
     }
     async function getFromDb(query, params, field) {
         const res = (await db.execute(query, params))[0];
-        return field ? res.map((item) => field=='nomeStraniero' ? (item[field] || item['nome']) : item[field]) : res;
+        return field ? res.map((item) => field == 'nomeStraniero' ? (item[field] || item['nome']) : item[field]) : res;
     }
     const regioni = await getFromDb('SELECT * FROM regioni ORDER BY nome', null, 'nome');
     const regioniLowercase = regioni.map(r => r.toLowerCase());
@@ -36,19 +36,37 @@ require('dotenv').config();
         var queryParams = [];
 
         if (params["provincia"]) { // Handle provincia
-            if ((await getFromDb('SELECT nome FROM province WHERE LOWER(nome)=?', [params["provincia"]])).length<1) {
+            if ((await getFromDb('SELECT nome FROM province WHERE LOWER(nome)=?', [params["provincia"]])).length < 1) {
                 return new ApiResponse(400, "Provincia inesistente");
             }
             query += ' WHERE p.nome=?';
             queryParams.push(params["provincia"]);
-        }
-        else if (params["regione"]) { // Handle regione
+        } else if (params["regione"]) { // Handle regione
             if (!regioniLowercase.includes(params["regione"])) {
                 return new ApiResponse(400, "Regione inesistente");
             }
             query += ' WHERE LOWER(r.nome)=?';
             queryParams.push(params["regione"]);
         }
+
+        // Filtraggio by nome
+        if (params["nome"]) {
+            query += ' AND LOWER(c.nome) LIKE ?';
+            queryParams.push(`%${params["nome"]}%`);
+        }
+        if (params["codice"]) {
+            query += ' AND c.codice = ?';
+            queryParams.push(params["codice"]);
+        }
+        if (params["codiceCatastale"]) {
+            query += ' AND c.codiceCatastale = ?';
+            queryParams.push(params["codiceCatastale"]);
+        }
+        if (params["cap"]) {
+            query += ' AND c.cap = ?';
+            queryParams.push(params["cap"]);
+        }
+
         query += ' ORDER BY c.nome';
 
         var field = null;
@@ -71,16 +89,30 @@ require('dotenv').config();
         // Tutte le keys a lowercase
         Object.keys(params).forEach(key => params[key] = params[key].toLowerCase());
 
-        var query = 'SELECT * FROM province';
+        var query = 'SELECT * FROM province WHERE 1=1 ';
         var queryParams = [];
 
         if (params["regione"]) { // Handle regione
             if (!regioniLowercase.includes(params["regione"])) {
                 return new ApiResponse(400, "Regione inesistente");
             }
-            query += ' WHERE LOWER(regione)=?';
+            query += ' AND LOWER(regione)=?';
             queryParams.push(params["regione"]);
         }
+
+        if (params["nome"]) {
+            query += ' AND LOWER(nome) LIKE ?';
+            queryParams.push(`%${params["nome"]}%`);
+        }
+        if (params["codice"]) {
+            query += ' AND codice = ?';
+            queryParams.push(params["codice"]);
+        }
+        if (params["sigla"]) {
+            query += ' AND sigla = ?';
+            queryParams.push(params["sigla"]);
+        }
+
         query += ' ORDER BY nome';
 
         return new ApiResponse(200, await getFromDb(query, queryParams, params["onlyname"] ? 'nome' : null));
