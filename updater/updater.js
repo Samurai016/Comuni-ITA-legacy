@@ -3,6 +3,7 @@ const xlsx = require('xlsx');
 const telegram = require('./telegram_bot');
 const mysql = require('mysql2/promise');
 const path = require('path');
+const htmlParser = require('node-html-parser');
 require('dotenv').config({ path: path.resolve(__dirname + '\\..\\environment.env') });
 
 //#region Utils
@@ -37,6 +38,19 @@ function sanitizeForTelegram(text) {
         text = text.replaceAll(escapes[i], `\\${escapes[i]}`);
     }
     return text;
+}
+function sanitizeEmail(email) {
+    if (!email) return null;
+    return email?.trim().replaceAll('/', '');
+}
+function sanitizeTelefono(numero) {
+    if (!numero) return null;
+    var result = numero.trim().replaceAll('/', '').replaceAll('-', '').replaceAll(' ', '').replace(/[a-z]+.*/, '');
+    if (!/^\+39/.exec(result)) result = '+39' + result;
+    return result;
+}
+function sanitizeName(name) {
+    return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll('-', '').replaceAll(' ', '').replaceAll("'", '');
 }
 //#endregion
 
@@ -80,7 +94,7 @@ function sanitizeForTelegram(text) {
         const csv = xlsx.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]).split('\n');
         //#endregion
 
-        //#region Reading file and mapping
+        //#region 2. Reading file and mapping
         console.log('[Updater] Reading file and mapping');
         const comuni = [];
         const regioni = [];
@@ -116,11 +130,11 @@ function sanitizeForTelegram(text) {
         }
         //#endregion
 
-        //#region Fetching extra data
+        //#region 3. Fetching extra data
         // https://query.wikidata.org/#SELECT%20%3Fistat%20%3Fcap%20%3Fprefisso%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279%2a%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP473%20%3Fprefisso.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D
         console.log('[Updater] Fetching extra data');
-        const url = 'https://query.wikidata.org/sparql?query=SELECT%20%3Fistat%20%3Fcap%20%3Fprefisso%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279%2a%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP473%20%3Fprefisso.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D';
-        const responseBuffer = await fetch(url, { headers: { 'Accept': 'text/csv' } }).then(res => res.buffer());
+        var url = 'https://query.wikidata.org/sparql?query=SELECT%20%3Fistat%20%3Fcap%20%3Fprefisso%20%3Fcoordinate%0AWHERE%20%7B%0A%20%20%3Fitem%20p%3AP31%2Fps%3AP31%2Fwdt%3AP279%2a%20wd%3AQ747074.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP635%20%3Fistat.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP281%20%3Fcap.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP473%20%3Fprefisso.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoordinate.%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20%0A%20%20%20%20bd%3AserviceParam%20wikibase%3Alanguage%20"it".%20%0A%20%20%20%20%23%20%3Fitem%20rdfs%3Alabel%20%3FitemLabel.%0A%20%20%7D%0A%7D';
+        var responseBuffer = await fetch(url, { headers: { 'Accept': 'text/csv' } }).then(res => res.buffer());
         const comuniWithProblems = new Map();
         try {
             // Create binding map
@@ -159,10 +173,73 @@ function sanitizeForTelegram(text) {
         }
         //#endregion
 
-        //#region Solving conflicts
+        //#region 4. Fetching contacts
+        console.log('[Updater] Fetching contacts');
+        url = 'https://dait.interno.gov.it/territorio-e-autonomie-locali/sut/elenco_contatti_comuni_italiani.php';
+        responseBuffer = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36 OPR/89.0.4447.48'
+            }
+        }).then(res => res.buffer());
+        console.log('[Updater] Downloaded contacts');
+        const comuniNotFound = [];
+        try {
+            const html = htmlParser.parse(responseBuffer.toString());
+            const rows = html.querySelectorAll('table tbody tr');
+            // Binding data
+            const provinceValues = Array.from(province.values());
+            const comuniSanitized = comuni.map(function(c) {
+                return {
+                    nome: sanitizeName(c.nome.trim().toLowerCase()),
+                    provincia: provinceValues.find(p => p.nome==c.provincia)?.sigla.toLowerCase()
+                };
+            });
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].querySelectorAll('td');
+                const provincia = cells[2].textContent.trim().toLowerCase();
+                var nome = cells[1].textContent.trim().toLowerCase();
+                if (nome.includes('/')) nome = nome.split('/')[0];
+                nome = sanitizeName(nome);
+                var indexOfComune = comuniSanitized.findIndex(c => c.nome==nome && c.provincia==provincia);
+                if (indexOfComune<0) {
+                    indexOfComune = comuniSanitized.findIndex(c => new RegExp(`^${nome}`).exec(c.nome) && c.provincia==provincia);
+                }
+
+                if (indexOfComune>=0) {
+                    const comune = comuni[indexOfComune];
+                    comune.email = sanitizeEmail(cells[3].textContent?.trim().split(' ')[0]); 
+                    comune.pec = sanitizeEmail(cells[4].textContent?.trim()); 
+                    comune.telefono = sanitizeTelefono(cells[5].textContent);
+                    comune.fax = sanitizeTelefono(cells[6].textContent);
+
+                    if ((comune.email && !comune.email.includes('@')) || (comune.pec && !comune.pec.includes('@'))) {
+                        comuniNotFound.push({
+                            nome: cells[1].textContent.trim(), 
+                            provincia: cells[2].textContent.trim(),
+                            rawEmail: cells[3].textContent?.trim(),
+                            rawPec: cells[4].textContent?.trim(),
+                            onlyEmails: true,
+                        });
+                    }
+                } else {
+                    comuniNotFound.push({
+                        nome: cells[1].textContent.trim(), 
+                        provincia: cells[2].textContent.trim(),
+                        onlyEmails: false,
+                    });
+                }
+            }
+        } catch (err) {
+            console.error('Error');
+            console.error(err);
+        }
+        //#endregion
+
+        //#region 5. Solving conflicts
         console.log('[Updater] Solving conflicts');
         // Dump errors
-        if (comuniWithProblems.size > 0) {
+        if (comuniWithProblems.size > 0 || comuniNotFound.length > 0) {
+            // comuniWithProblems
             const comuniWithProblemsKeys = Array.from(comuniWithProblems.keys());
             for (let i = 0; i < comuniWithProblemsKeys.length; i++) {
                 const comune = comuniWithProblems.get(comuniWithProblemsKeys[i]);
@@ -184,10 +261,64 @@ function sanitizeForTelegram(text) {
                 if (reply) {
                     const match = /(\d+), ?(\d+), ?(.+)/gm.exec(reply.update.message.text.trim());
                     if (match) {
-                        comuni[comuniWithProblemsKeys[i]].cap = sanitizeCap(match[1]);
-                        comuni[comuniWithProblemsKeys[i]].prefisso = sanitizePrefisso(match[2]);
-                        comuni[comuniWithProblemsKeys[i]].coordinate = getCoords(match[3]);
-                        success = true;
+                        comuni[comuniWithProblemsKeys[i]].cap = match[1]=='null' ? null : sanitizeCap(match[1]);
+                        comuni[comuniWithProblemsKeys[i]].prefisso = match[2]=='null' ? null : sanitizePrefisso(match[2]);
+                        comuni[comuniWithProblemsKeys[i]].coordinate = match[3]=='null' ? null : getCoords(match[3]);
+                    }
+                }
+            }
+
+            // comuniNotFound
+            for (let i = 0; i < comuniNotFound.length; i++) {
+                if (comuniNotFound[i].onlyEmails) {
+                    const reply = await bot.waitForReply(sanitizeForTelegram(
+                        `❗ *Email del comune errate!*\n\n` +
+                        `Comune: _${comuniNotFound[i].nome}_\n` +
+                        `Provincia: _${comuniNotFound[i].provincia}_\n` +
+                        `Email trovata: \`${comuniNotFound[i].rawEmail}\`\n` +
+                        `Pec trovata: \`${comuniNotFound[i].rawPec}\`\n` +
+                        `Rispondi a questo messaggio inviando *email* e *pec* in questo modo:\n` +
+                        '`email, pec`'
+                    ), async (rep) => {
+                        const success = rep.update.message.text.split(',');
+                        if (success.length<2) await bot.sendText(`Dato non valido`);
+                        return success;
+                    });
+    
+                    if (reply) {
+                        const match = reply.update.message.text.split(',').map(c => c.trim().toLowerCase());
+                        if (match) {
+                            const indexComune = comuni.indexOf(c => c.codice.trim().toLowerCase() == match[0]);
+                            if (indexComune>=0) {
+                                comuni[indexComune].email = match[1]=='null' ? null : sanitizeEmail(match[1]);
+                                comuni[indexComune].pec = match[2]=='null' ? null : sanitizeEmail(match[2]);
+                            }
+                        }
+                    }
+                } else {
+                    const reply = await bot.waitForReply(sanitizeForTelegram(
+                        `❗ *Contatti del comune non trovati!*\n\n` +
+                        `Comune: _${comuniNotFound[i].nome}_\n` +
+                        `Provincia: _${comuniNotFound[i].provincia}_\n` +
+                        `Rispondi a questo messaggio inviando *codice ISTAT*, *email*, *pec*, *telefono* e *fax* in questo modo:\n` +
+                        '`codice ISTAT, email, pec, telefono, fax`'
+                    ), async (rep) => {
+                        const success = rep.update.message.text.split(',');
+                        if (success.length<5) await bot.sendText(`Dato non valido`);
+                        return success;
+                    });
+    
+                    if (reply) {
+                        const match = reply.update.message.text.split(',').map(c => c.trim().toLowerCase());
+                        if (match) {
+                            const indexComune = comuni.indexOf(c => c.codice.trim().toLowerCase() == match[0]);
+                            if (indexComune>=0) {
+                                comuni[indexComune].email = match[1]=='null' ? null : sanitizeEmail(match[1]);
+                                comuni[indexComune].pec = match[2]=='null' ? null : sanitizeEmail(match[2]);
+                                comuni[indexComune].telefono = match[3]=='null' ? null : sanitizeTelefono(match[3]);
+                                comuni[indexComune].fax = match[4]=='null' ? null : sanitizeTelefono(match[4]);
+                            }
+                        }
                     }
                 }
             }
@@ -196,13 +327,13 @@ function sanitizeForTelegram(text) {
         }
         //#endregion
 
-        //#region Sorting
+        //#region 6. Sorting
         const comuniSorted = comuni.sort((a, b) => a.nome.localeCompare(b.nome));
         const provinceSorted = Array.from(province.values()).sort((a, b) => Number.parseInt(a.codice) - Number.parseInt(b.codice));
         const regioniSorted = regioni.sort((a, b) => a.localeCompare(b));
         //#endregion
 
-        //#region Update repos
+        //#region 7. Update repos
         console.log('[Updater] Backuping repo');
         const backup = {
             comuni: (await db.execute('SELECT * FROM comuni'))[0],
@@ -230,16 +361,33 @@ function sanitizeForTelegram(text) {
 
         for (let i = 0; i < comuniSorted.length; i++) {
             const comune = comuniSorted[i];
-            await db.execute('INSERT INTO comuni VALUES (?,?,?,?,?,?,?,?,?)', [comune.codice || null, comune.nome || null, comune.nomeStraniero || null, comune.codiceCatastale || null, comune.cap || null, comune.prefisso || null, comune.coordinate?.lat || null, comune.coordinate?.lng || null, provinceMap.get(comune.provincia) || null]);
+            const dati = [
+                comune.codice || null, 
+                comune.nome || null, 
+                comune.nomeStraniero || null, 
+                comune.codiceCatastale || null, 
+                comune.cap || null, 
+                comune.prefisso || null, 
+                comune.coordinate?.lat || null, 
+                comune.coordinate?.lng || null, 
+                provinceMap.get(comune.provincia) || null,
+                comune.email,
+                comune.pec,
+                comune.telefono,
+                comune.fax
+            ];
+            await db.execute(`INSERT INTO comuni VALUES (${new Array(dati.length).fill('?').join(',')})`, dati);
         }
 
+        const endDate = new Date();
+        const elapsedTime = (endDate-startDate)/1000;
         await bot.sendBytes(
             Buffer.from(JSON.stringify(backup), 'utf8'),
             'backup.json',
             `✔ *Aggiornamento database completato con successo*\n` +
-            `Trovati ${comuni.length} comuni`
+            `Trovati ${comuni.length} comuni in ${elapsedTime.toFixed()} secondi`
         );
-        console.log(`[Updater] Update complete, found ${comuni.length} comuni`);
+        console.log(`[Updater] Update complete, found ${comuni.length} comuni in ${elapsedTime.toFixed()} seconds`);
         //#endregion
 
         process.exit();

@@ -5,7 +5,7 @@ info:
     Semplice API che permette di ottenere in formato JSON i comuni italiani.
 
     *Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*
-  version: 2.9.0
+  version: 2.10.0
   x-logo:
     url: ./assets/logo.png
     altText: Comuni ITA Logo
@@ -241,7 +241,7 @@ components:
       description: |-
         Codice catastale del comune da cercare.  
         L'API effettua la ricerca cercando comuni che abbiano esattamente lo stesso codice catastale indicato. Inserendo ad esempio `A952` verrà restituito il comune di Bolzano, ma inserendo solo `A9` non verrà restituito nulla.
-      example: 'A952'
+      example: A952
     cap_comune:
       in: query
       name: cap
@@ -280,7 +280,7 @@ components:
         Sigla della provincia da cercare.  
         Il parametro è case insensitive.  
         L'API effettua la ricerca cercando province che abbiano esattamente la stessa sigla indicata. Inserendo ad esempio `bz` verrà restituita la provincia di Bolzano, ma inserendo solo `b` non verrà restituito nulla.
-      example: 'bz'
+      example: bz
   schemas:
     Comune:
       type: object
@@ -316,6 +316,28 @@ components:
           description: Prefisso telefonico del comune.
           example: '0471'
           pattern: \d{2,5}
+        email:
+          type: string
+          format: email
+          description: Email ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).
+          example: 'urp@comune.bolzano.it'
+        pec:
+          type: string
+          format: email
+          description: Email PEC (Posta Elettronica Certificata) del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).
+          example: 'bolzano@legalmail.it'
+        telefono:
+          type: string
+          description: |-
+            Numero di telefono ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   
+            Il valore è fornito di prefisso telefonico internazionale e non spaziato.
+          example: '+390471997111'
+        faz:
+          type: string
+          description: |-
+            Numero di fax del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   
+            Il valore è fornito di prefisso telefonico internazionale e non spaziato.
+          example: '+390471997404'
         coordinate:
           type: object
           properties:

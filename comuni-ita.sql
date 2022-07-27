@@ -39,6 +39,10 @@ CREATE TABLE `comuni` (
   `lat` float DEFAULT NULL,
   `lng` float DEFAULT NULL,
   `provincia` varchar(4) DEFAULT NULL
+  `email` varchar(100) DEFAULT NULL,
+  `pec` varchar(100) DEFAULT NULL,
+  `telefono` varchar(100) DEFAULT NULL,
+  `fax` varchar(100) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
