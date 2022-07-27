@@ -332,7 +332,7 @@ components:
             Numero di telefono ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   
             Il valore è fornito di prefisso telefonico internazionale e non spaziato.
           example: '+390471997111'
-        faz:
+        fax:
           type: string
           description: |-
             Numero di fax del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   
