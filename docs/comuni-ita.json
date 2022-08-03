@@ -3,7 +3,7 @@
   "info": {
     "title": "Comuni ITA",
     "description": "Semplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
-    "version": "2.10.0",
+    "version": "2.10.1",
     "x-logo": {
       "url": "./assets/logo.png",
       "altText": "Comuni ITA Logo"
@@ -465,23 +465,23 @@
           "email": {
             "type": "string",
             "format": "email",
-            "description": "Email ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).",
+            "description": "Email ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   \nNon si assicura la correttezza sintattica e/o semantica del dato in quanto fornito direttamente dal comune in questione.",
             "example": "urp@comune.bolzano.it"
           },
           "pec": {
             "type": "string",
             "format": "email",
-            "description": "Email PEC (Posta Elettronica Certificata) del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).",
+            "description": "Email PEC (Posta Elettronica Certificata) del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   \nNon si assicura la correttezza sintattica e/o semantica del dato in quanto fornito direttamente dal comune in questione.",
             "example": "bolzano@legalmail.it"
           },
           "telefono": {
             "type": "string",
-            "description": "Numero di telefono ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   \nIl valore è fornito di prefisso telefonico internazionale e non spaziato.",
+            "description": "Numero di telefono ufficiale del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   \nNon si assicura la correttezza sintattica e/o semantica del dato in quanto fornito direttamente dal comune in questione.",
             "example": "+390471997111"
           },
           "fax": {
             "type": "string",
-            "description": "Numero di fax del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).   \nIl valore è fornito di prefisso telefonico internazionale e non spaziato.",
+            "description": "Numero di fax del comune (come comunicata al Ministero dell'Interno, il dato potrebbe essere malformato, questo a causa di dati errati inviate dalle amministrazioni al Ministero stesso, in caso di anomalia si prega di contattare direttamente lo sviluppatore che prevederà al ripristino dei valori esatti, grazie).     \nNon si assicura la correttezza sintattica e/o semantica del dato in quanto fornito direttamente dal comune in questione.",
             "example": "+390471997404"
           },
           "coordinate": {

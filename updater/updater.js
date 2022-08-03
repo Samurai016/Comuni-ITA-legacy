@@ -45,9 +45,7 @@ function sanitizeEmail(email) {
 }
 function sanitizeTelefono(numero) {
     if (!numero) return null;
-    var result = numero.trim().replaceAll('/', '').replaceAll('-', '').replaceAll(' ', '').replace(/[a-z]+.*/, '');
-    if (!/^\+39/.exec(result)) result = '+39' + result;
-    return result;
+    return numero.trim();
 }
 function sanitizeName(name) {
     return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll('-', '').replaceAll(' ', '').replaceAll("'", '');
