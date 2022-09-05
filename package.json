@@ -25,7 +25,7 @@
     "url": "https://github.com/Samurai016/Comuni-ITA.git"
   },
   "engines": {
-    "node": "15.x"
+    "node": "16.x"
   },
   "dependencies": {
     "axios": "^0.21.1",
