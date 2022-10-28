@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Comuni ITA",
-    "description": "Semplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
+    "description": "> ## ⚠️ ATTENZIONE! Aggiornamento importante ⚠️  \n> A causa delle [nuove politiche di Heroku](https://devcenter.heroku.com/changelog-items/2461), a partire dal 28 Novembre 2022 **l'API non sarà più disponibile all'attuale URL** [https://comuni-ita.herokuapp.com](https://comuni-ita.herokuapp.com)  \n> Sto lavorando per trovare una soluzione alternativa affinchè l'API possa continuare a rimanere online, in ogni caso l'attuale URL verrà dismesso (non farà redirect su nuovi domini) quindi invito chiunque stia utilizzando l'API a tenere in considerazione questa cosa.  \n> La [repository GitHub](https://github.com/Samurai016/Comuni-ITA) rimarrà attiva e aggiornata e sarà sempre possibile scaricare liberamente il codice e hostarlo su un proprio server.  \n> Ricordo che il progetto è un mio side-project personale, tenuto in vita gratuitamente e che quindi si appoggia solamente a risorse disponibili gratuitamente.  \n>  \n> Ulteriori aggiornamenti verranno pubblicati in questa sezione e [sull'homepage della repository GitHub](https://github.com/Samurai016/Comuni-ITA)  \n\nSemplice API che permette di ottenere in formato JSON i comuni italiani.\n\n*Logo ispired by: [Castle by Jasfart from the Noun Project](https://thenounproject.com/omataloon/)*",
     "version": "2.10.1",
     "x-logo": {
       "url": "./assets/logo.png",
