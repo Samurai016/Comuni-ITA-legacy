@@ -3,6 +3,9 @@
 [![Hosted on Heroku](https://img.shields.io/badge/Hosted%20on%20Heroku-passing?style=flat-square&logo=heroku&labelColor=430098&color=430098)](https://comuni-ita.herokuapp.com/)
 [![Leggi la documentazione](https://img.shields.io/badge/Leggi%20la%20documentazione%20Swagger-passing?style=flat-square&logo=Read%20the%20Docs&labelColor=8CA1AF&color=8CA1AF&logoColor=white)](https://comuni-ita.herokuapp.com/)
 
+> ## Nuova repository
+> La nuova repository è disponibile [qui](https://github.com/Samurai016/Comuni-ITA).
+
 > ## ⚠️ ATTENZIONE! Aggiornamento importante ⚠️  
 > A causa delle [nuove politiche di Heroku](https://devcenter.heroku.com/changelog-items/2461), a partire dal 28 Novembre 2022 **l'API non sarà più disponibile all'attuale URL** [https://comuni-ita.herokuapp.com](https://comuni-ita.herokuapp.com)  
 > Sto lavorando per trovare una soluzione alternativa affinchè l'API possa continuare a rimanere online, in ogni caso l'attuale URL verrà dismesso (non farà redirect su nuovi domini) quindi invito chiunque stia utilizzando l'API a tenere in considerazione questa cosa.  
@@ -12,8 +15,8 @@
 > Ulteriori aggiornamenti verranno pubblicati in questa sezione e [sull'homepage della documentazione](https://comuni-ita.herokuapp.com)  
 > 
 > ### Aggiornamento 15/11/2022
-> Ho trovato una soluzione alternativa a Heroku, il progetto verrà ospitato su Supabase, la repository verrà migrata e questa su cui stai leggendo questo messaggio verrà rinominata in *Comuni-ITA-legacy* e poi archiviata per rimanere disponibile alla lettura ed eventualmente disponibile per coloro che vorranno hostare una loro versione dell'API.  
-> **La nuova repository verrà linkata qui.**
+> Ho trovato una soluzione alternativa a Heroku, il progetto è stato spostato su Supabase, la repository è stata migrata e questa su cui stai leggendo questo messaggio è stata archiviata per rimanere disponibile alla lettura ed eventualmente disponibile per coloro che vorranno hostare una loro versione dell'API indipendente da Supabase.  
+> **La nuova repository è disponibile [qui](https://github.com/Samurai016/Comuni-ITA).**
 
 Tramite questa REST API hai accesso ad una lista di tutti i comuni, le province e le regioni italiane. I dati sono ottenuti e aggiornamenti da un sistema di aggiornamento semiautomatico che preleva i dati direttamente dagli archivi ISTAT e integra le informazioni mancanti interrogando Wikidata.
 I dati non ottenuti automaticamente dal sistema vengono inoltrati direttamente a me che procedo a verificarli e modificarli manualmente.
