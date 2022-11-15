@@ -10,6 +10,10 @@
 > Ricordo che il progetto è un mio side-project personale, tenuto in vita gratuitamente e che quindi si appoggia solamente a risorse disponibili gratuitamente.  
 >  
 > Ulteriori aggiornamenti verranno pubblicati in questa sezione e [sull'homepage della documentazione](https://comuni-ita.herokuapp.com)  
+> 
+> ### Aggiornamento 15/11/2022
+> Ho trovato una soluzione alternativa a Heroku, il progetto verrà ospitato su Supabase, la repository verrà migrata e questa su cui stai leggendo questo messaggio verrà rinominata in *Comuni-ITA-legacy* e poi archiviata per rimanere disponibile alla lettura ed eventualmente disponibile per coloro che vorranno hostare una loro versione dell'API.  
+> **La nuova repository verrà linkata qui.**
 
 Tramite questa REST API hai accesso ad una lista di tutti i comuni, le province e le regioni italiane. I dati sono ottenuti e aggiornamenti da un sistema di aggiornamento semiautomatico che preleva i dati direttamente dagli archivi ISTAT e integra le informazioni mancanti interrogando Wikidata.
 I dati non ottenuti automaticamente dal sistema vengono inoltrati direttamente a me che procedo a verificarli e modificarli manualmente.
