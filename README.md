@@ -1,5 +1,5 @@
 # [Comuni ITA API](https://comuni-ita.herokuapp.com/)
-![Versione](https://img.shields.io/github/package-json/v/Samurai016/comuni-ita?label=versione&style=flat-square)
+![Versione](https://img.shields.io/github/package-json/v/Samurai016/comuni-ita-legacy?label=versione&style=flat-square)
 [![Hosted on Heroku](https://img.shields.io/badge/Hosted%20on%20Heroku-passing?style=flat-square&logo=heroku&labelColor=430098&color=430098)](https://comuni-ita.herokuapp.com/)
 [![Leggi la documentazione](https://img.shields.io/badge/Leggi%20la%20documentazione%20Swagger-passing?style=flat-square&logo=Read%20the%20Docs&labelColor=8CA1AF&color=8CA1AF&logoColor=white)](https://comuni-ita.herokuapp.com/)
 
